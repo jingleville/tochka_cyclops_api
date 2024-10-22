@@ -1,4 +1,4 @@
-module TochkaApi
+module TochkaCyclopsApi
   class Response
     def initialize(response)
       @response = response

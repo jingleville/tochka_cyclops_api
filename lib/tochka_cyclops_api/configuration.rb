@@ -1,7 +1,7 @@
-module TochkaApi
+module TochkaCyclopsApi
   class Configuration
-    attr_accessor :certificate_path
-    attr_accessor :private_key_path
+    attr_accessor :certificate
+    attr_accessor :private_key
     attr_accessor :sign_system
     attr_accessor :sign_thumbprint
   end
