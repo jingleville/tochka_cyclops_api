@@ -2,7 +2,9 @@ require 'active_support/inflector'
 require 'json'
 
 require_relative 'request'
+
 require_relative 'schemas/echo'
+require_relative 'schemas/create_beneficiary_ul'
 
 module TochkaCyclopsApi
   module DataProcessor
@@ -34,12 +36,16 @@ module TochkaCyclopsApi
 
     def shape
       begin
-        schema = ('TochkaCyclopsApi::Schemas::' + @method.capitalize).constantize
+        schema = ('TochkaCyclopsApi::Schemas::' + camel_case_method).constantize
         schema.new
       rescue => e
         @errors = {error: e.message}
         false
       end
+    end
+
+    def camel_case_method
+      @method.split('_').map(&:capitalize).join
     end
 
     def body
