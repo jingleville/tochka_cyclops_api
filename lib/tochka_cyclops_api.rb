@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 require 'dry-types'
+require 'dry-validation'
+
+require_relative 'tochka_cyclops_api/generators/models_generator'
+require_relative 'tochka_cyclops_api/generators/initializer_generator'
 
 require_relative 'tochka_cyclops_api/data_processor'
 require_relative 'tochka_cyclops_api/configuration'

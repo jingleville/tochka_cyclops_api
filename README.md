@@ -7,7 +7,7 @@ A simple way to interact with the ["Tochka" bank's api][api_source_page]
 - [Getting started](#getting-started)
   - [Installation](#installation)
   - [Settings](#settings)
-  - [Usage](#usage)
+- [Usage](#usage)
 
 ## Getting started
 
@@ -15,15 +15,15 @@ A simple way to interact with the ["Tochka" bank's api][api_source_page]
 
 Add this line to your application's Gemfile:
 
-```ruby
-gem 'tochka_cylops_api'
+```sh
+bundle add tochka_cylops_api
 ```
 
-and run commands bellow to create the initializer:
+and run commands bellow to create the initializer, models and migrations:
 
-```
-rails generate tochka_cylops_api:install
-rails generate tochka_cylops_api:model
+```sh
+rails generate tochka_cyclops_api:models
+rails generate tochka_cyclops_api:initializer
 ```
 
 ### Settings

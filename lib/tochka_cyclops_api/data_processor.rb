@@ -6,8 +6,7 @@ require 'securerandom'
 require 'json'
 
 require_relative 'request'
-require_relative './generators/model_generator'
-require_relative './schemas/requests/echo'
+require_relative 'schemas/requests/echo'
 
 module TochkaCyclopsApi
   # Module for input data validation and subsequent request invocation
@@ -38,7 +37,7 @@ module TochkaCyclopsApi
     end
 
     def shape
-      require_relative "./schemas/requests/#{@method}"
+      require_relative "schemas/requests/#{@method}"
       schema = ['TochkaCyclopsApi', 'Schemas', 'Requests', camel_case_method].join('::').constantize
 
       schema.new

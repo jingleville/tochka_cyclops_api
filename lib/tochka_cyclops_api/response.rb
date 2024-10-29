@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './schemas/responses/echo'
+require_relative 'schemas/responses/echo'
 
 module TochkaCyclopsApi
   # Class for processing the response received from the api bank
@@ -38,7 +38,7 @@ module TochkaCyclopsApi
 
     def self.parse_error
       @error = @body['error']
-      require_relative './schemas/responses/error'
+      require_relative 'schemas/responses/error'
       response_schema = 'TochkaCyclopsApi::Schemas::Responses::Error'.constantize
 
       @response = TochkaCyclopsError.create(
@@ -53,7 +53,7 @@ module TochkaCyclopsApi
     end
 
     def self.schema
-      require_relative "./schemas/responses/#{@method}"
+      require_relative "schemas/responses/#{@method}"
       "TochkaCyclopsApi::Schemas::Responses::#{camel_case_method}".constantize
     rescue StandardError => e
       @errors = { error: e.message }
