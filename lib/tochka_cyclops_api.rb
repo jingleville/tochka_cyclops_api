@@ -9,6 +9,7 @@ require_relative 'tochka_cyclops_api/data_processor'
 require_relative 'tochka_cyclops_api/configuration'
 require_relative 'tochka_cyclops_api/version'
 require_relative 'tochka_cyclops_api/methods'
+require_relative 'tochka_cyclops_api/test'
 
 # Core module of this gem
 module TochkaCyclopsApi

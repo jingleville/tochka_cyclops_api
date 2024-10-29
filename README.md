@@ -28,7 +28,7 @@ rails generate tochka_cyclops_api:initializer
 
 ### Settings
 
-You have to set the settings in the initializer file (_config/initializers/healthcheck.rb_):
+You have to set the settings in the initializer file (_config/initializers/tochka_cyclops_api.rb_):
 
 ```ruby
 # frozen_string_literal: true
@@ -52,8 +52,8 @@ data - hash of the value required to fulfill the request.
 
 For example:
 ```ruby
-TochkaCyclopsApi.send(
-  inicialize_beneficiary_ul,
+TochkaCyclopsApi.send_request(
+  'create_beneficiary_ul',
   {
     inn: "7925930371",
     nominal_account_code: "000000000000000000000",

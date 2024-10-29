@@ -7,7 +7,7 @@ require_relative 'response'
 module TochkaCyclopsApi
   # Module for sending requests to the bank's api
   module Request
-    def self.send(body, method)
+    def self.send_request(body, method)
       @method = method
       initialize_request(body)
 

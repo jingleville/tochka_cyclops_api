@@ -15,11 +15,9 @@ module TochkaCyclopsApi
       end
 
       # https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-create-beneficiary-ip
-      class CreateBeneficiaryIp < Dry::Validation::Contract
+      class UpdateBeneficiaryIp < Dry::Validation::Contract
         schema do
-          required(:inn).value(:string)
-          optional(:nominal_account_code).value(:string)
-          optional(:nominal_account_bic).value(:string)
+          required(:beneficiary_id).value(:string)
           required(:beneficiary_data).schema(
             TochkaCyclopsApi::Schemas::Requests::BeneficiaryData.schema
           )

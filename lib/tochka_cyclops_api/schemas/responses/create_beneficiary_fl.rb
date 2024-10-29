@@ -1,6 +1,8 @@
-# frozen_string_literal: true
-
 require 'dry-struct'
+
+module Types
+  include Dry.Types()
+end
 
 module TochkaCyclopsApi
   module Schemas
@@ -13,8 +15,8 @@ module TochkaCyclopsApi
         attribute :nominal_account_bic, Types::Strict::String.optional
       end
 
-      # Response chema for create_beneficiary_ip request
-      class CreateBeneficiaryIp < Dry::Struct
+      # Response chema for create_beneficiary_fl request
+      class CreateBeneficiaryFl < Dry::Struct
         attribute :beneficiary, BeneficiaryData
       end
     end

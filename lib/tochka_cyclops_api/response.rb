@@ -37,19 +37,19 @@ module TochkaCyclopsApi
     end
 
     def self.parse_error
-      @error = @body['error']
+      @result = @body['error']
       require_relative 'schemas/responses/error'
       response_schema = 'TochkaCyclopsApi::Schemas::Responses::Error'.constantize
 
       @response = TochkaCyclopsError.create(
         body: @body,
-        code: @error['code'],
-        message: @error['message']
+        code: @result['code'],
+        message: @result['message']
       )
 
       @request.update(result: @response)
 
-      @response_struct = response_schema.new(@error.deep_symbolize_keys)
+      @response_struct = response_schema.new(@result.deep_symbolize_keys)
     end
 
     def self.schema

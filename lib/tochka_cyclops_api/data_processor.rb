@@ -33,7 +33,7 @@ module TochkaCyclopsApi
     end
 
     def send_data
-      TochkaCyclopsApi::Request.send(body, @method)
+      TochkaCyclopsApi::Request.send_request(body, @method)
     end
 
     def shape
