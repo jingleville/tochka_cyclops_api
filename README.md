@@ -16,7 +16,7 @@ A simple way to interact with the ["Tochka" bank's api][api_source_page]
 Add this line to your application's Gemfile:
 
 ```sh
-bundle add tochka_cylops_api
+bundle add tochka_cyclops_api
 ```
 
 and run commands bellow to create models, migrations and the initializer:
