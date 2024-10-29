@@ -1,68 +1,76 @@
-# TochkaCyclopsApi
+# [Rails::Healthcheck][gem_page]
 
-Гем для работы с API банка Точка
-https://api.tochka.com/static/v1/tender-docs/cyclops/main/requests.html
+[![Gem Version][gem_version_image]][gem_version_page]
 
-## Installation
+A simple way to configure a healthcheck route in Rails applications
 
-Install the gem and add to the application's Gemfile by executing:
+## Table of Contents
 
-```bash
-bundle add tochka_cyclops_api
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+  - [Settings](#settings)
+  - [Custom Response](#custom-response)
+  - [Verbose](#verbose)
+  - [Ignoring logs](#ignoring-logs)
+    - [Lograge](#lograge)
+    - [Datadog](#datadog)
+  - [Requests Examples](#requests-examples)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Getting started
+
+### Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'tochka_cylops_api'
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+and run commands bellow to create the initializer:
 
-```bash
-gem install tochka_cyclops_api
+```
+rails generate tochka_cylops_api:install
+rails generate tochka_cylops_api:model
 ```
 
-Current gem version works only with rails projects.
+### Settings
+
+You have to set the settings in the initializer file (_config/initializers/healthcheck.rb_):
+
+```ruby
+# frozen_string_literal: true
+
+TochkaCyclopsApi.configure do |config|
+  config.certificate = File.read(PATH TO TOCHKA CERTIFICATE)
+  config.private_key = File.read(PATH TO TOCHKA PRIVATE KEY)
+  config.sign_thumbprint = YOUR THUMBPRINT
+  config.sign_system = YOUR SYSTEM
+end
+```
 
 ## Usage
 
-Перед тем, как приступить к использованию требуется подготовить гем.
-1) для генерации используемых моделей и таблиц запустите команду
-
-  ```
-  rails g tochka_cyclops_api:model
-  ```
-
-  После успешного выполнения запустите миграцию
-  ```
-  rails db:migrate
-  ```
-
-  При этом будут созданы 3 таблицы и модели связанные с ними.
-  - tochka_cyclops_requests
-  - tochka_cyclops_responses
-  - tochka_cyclops_errors
-
-2) после необходимо сгенерировать в директории config файл конфигурации
-  # tochka_cyclops_api.rb
-  ```
-  TochkaCyclopsApi.configure do |config|
-    config.certificate = File.read(ENV['TOCHKA_CERTIFICATE'])
-    config.private_key = File.read(ENV['TOCHKA_PRIVATE_KEY'])
-    config.sign_thumbprint = 'da10812df4559645b7bc3fe7a02229fc63c30d7e'
-    config.sign_system = 'birdsbuild'
-  end
-  ```
-
-После того как данные действия выполнены можно приступать к использованию гема.
-Для отправки запроса используется команда:
-```
+To send a request use the following command:
+```ruby
 TochkaCyclopsApi.send_request(method, data)
 ```
-method - наименование метода, определенное на стороне банка точка;
-data - хэш значение, требуемых для осуществления запроса.
+method - name of the method defined on the bank side point;
+data - hash of the value required to fulfill the request.
 
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/andrewgavrick/tochka_cyclops_api.
+For example:
+```ruby
+TochkaCyclopsApi.send(
+  inicialize_beneficiary_ul,
+  {
+    inn: "7925930371",
+    nominal_account_code: "000000000000000000000",
+    nominal_account_bic: "0000000000",
+    beneficiary_data: {
+        name: "ООО \"Рога и Копыта\"",
+        kpp: "246301001"
+    }
+  }
+)
+```
