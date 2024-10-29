@@ -1,22 +1,13 @@
-# [Rails::Healthcheck][gem_page]
+# TochkaCyclopsApi
 
-[![Gem Version][gem_version_image]][gem_version_page]
-
-A simple way to configure a healthcheck route in Rails applications
+A simple way to interact with the ["Tochka" bank's api][api_source_page]
 
 ## Table of Contents
 
 - [Getting started](#getting-started)
   - [Installation](#installation)
   - [Settings](#settings)
-  - [Custom Response](#custom-response)
-  - [Verbose](#verbose)
-  - [Ignoring logs](#ignoring-logs)
-    - [Lograge](#lograge)
-    - [Datadog](#datadog)
-  - [Requests Examples](#requests-examples)
-- [Contributing](#contributing)
-- [License](#license)
+  - [Usage](#usage)
 
 ## Getting started
 
@@ -74,3 +65,5 @@ TochkaCyclopsApi.send(
   }
 )
 ```
+
+[api_source_page]: https://api.tochka.com/static/v1/tender-docs/cyclops/main/index.html
