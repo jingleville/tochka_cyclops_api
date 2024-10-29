@@ -19,7 +19,7 @@ Add this line to your application's Gemfile:
 bundle add tochka_cylops_api
 ```
 
-and run commands bellow to create the initializer, models and migrations:
+and run commands bellow to create models, migrations and the initializer:
 
 ```sh
 rails generate tochka_cyclops_api:models
