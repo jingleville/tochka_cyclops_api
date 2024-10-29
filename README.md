@@ -1,28 +1,61 @@
 # TochkaCyclopsApi
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tochka_cyclops_api`. To experiment with that code, run `bin/console` for an interactive prompt.
+Гем для работы с API банка Точка
+https://api.tochka.com/static/v1/tender-docs/cyclops/main/requests.html
 
 ## Installation
-
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
 
 Install the gem and add to the application's Gemfile by executing:
 
 ```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+bundle add tochka_cyclops_api
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+gem install tochka_cyclops_api
 ```
+
+Current gem version works only with rails projects.
 
 ## Usage
 
-TODO: Write usage instructions here
+Перед тем, как приступить к использованию требуется подготовить гем.
+1) для генерации используемых моделей и таблиц запустите команду
+
+  ```
+  rails g tochka_cyclops_api:model
+  ```
+
+  После успешного выполнения запустите миграцию
+  ```
+  rails db:migrate
+  ```
+
+  При этом будут созданы 3 таблицы и модели связанные с ними.
+  - tochka_cyclops_requests
+  - tochka_cyclops_responses
+  - tochka_cyclops_errors
+
+2) после необходимо сгенерировать в директории config файл конфигурации
+  # tochka_cyclops_api.rb
+  ```
+  TochkaCyclopsApi.configure do |config|
+    config.certificate = File.read(ENV['TOCHKA_CERTIFICATE'])
+    config.private_key = File.read(ENV['TOCHKA_PRIVATE_KEY'])
+    config.sign_thumbprint = 'da10812df4559645b7bc3fe7a02229fc63c30d7e'
+    config.sign_system = 'birdsbuild'
+  end
+  ```
+
+После того как данные действия выполнены можно приступать к использованию гема.
+Для отправки запроса используется команда:
+```
+TochkaCyclopsApi.send_request(method, data)
+```
+method - наименование метода, определенное на стороне банка точка;
+data - хэш значение, требуемых для осуществления запроса.
 
 ## Development
 
@@ -32,4 +65,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/tochka_cyclops_api.
+Bug reports and pull requests are welcome on GitHub at https://github.com/andrewgavrick/tochka_cyclops_api.
