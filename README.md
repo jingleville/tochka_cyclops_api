@@ -1,35 +1,69 @@
 # TochkaCyclopsApi
 
-TODO: Delete this and the text below, and describe your gem
+A simple way to interact with the ["Tochka" bank's api][api_source_page]
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tochka_cyclops_api`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Table of Contents
 
-## Installation
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+  - [Settings](#settings)
+- [Usage](#usage)
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+## Getting started
 
-Install the gem and add to the application's Gemfile by executing:
+### Installation
 
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+Add this line to your application's Gemfile:
+
+```sh
+bundle add tochka_cylops_api
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+and run commands bellow to create the initializer, models and migrations:
 
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```sh
+rails generate tochka_cyclops_api:models
+rails generate tochka_cyclops_api:initializer
+```
+
+### Settings
+
+You have to set the settings in the initializer file (_config/initializers/healthcheck.rb_):
+
+```ruby
+# frozen_string_literal: true
+
+TochkaCyclopsApi.configure do |config|
+  config.certificate = File.read(PATH TO TOCHKA CERTIFICATE)
+  config.private_key = File.read(PATH TO TOCHKA PRIVATE KEY)
+  config.sign_thumbprint = YOUR THUMBPRINT
+  config.sign_system = YOUR SYSTEM
+end
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+To send a request use the following command:
+```ruby
+TochkaCyclopsApi.send_request(method, data)
+```
+method - name of the method defined on the bank side point;
+data - hash of the value required to fulfill the request.
 
-## Development
+For example:
+```ruby
+TochkaCyclopsApi.send(
+  inicialize_beneficiary_ul,
+  {
+    inn: "7925930371",
+    nominal_account_code: "000000000000000000000",
+    nominal_account_bic: "0000000000",
+    beneficiary_data: {
+        name: "ООО \"Рога и Копыта\"",
+        kpp: "246301001"
+    }
+  }
+)
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/tochka_cyclops_api.
+[api_source_page]: https://api.tochka.com/static/v1/tender-docs/cyclops/main/index.html

@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://gitlab.com/andrewgavrick/tochka_api"
   spec.required_ruby_version = ">= 3.0.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://gitlab.com/andrewgavrick/tochka_api"
@@ -33,8 +33,8 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "dry-validation", "~> 1.10"
+  spec.add_dependency "dry-validation", "~> 1.10"
+  spec.add_dependency "dry-struct", "~> 1.6"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

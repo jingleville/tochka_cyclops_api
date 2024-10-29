@@ -1,29 +1,31 @@
+# frozen_string_literal: true
+
 require 'active_support/inflector'
+require 'active_support'
+require 'securerandom'
 require 'json'
 
 require_relative 'request'
-
-require_relative 'schemas/echo'
-require_relative 'schemas/create_beneficiary_ul'
+require_relative 'schemas/requests/echo'
 
 module TochkaCyclopsApi
+  # Module for input data validation and subsequent request invocation
   module DataProcessor
     def send_request(method, data)
       @method = method
       @data = data
+      @id = SecureRandom.uuid
 
-      if valid_params?
-        send_data
-      else
-        return @errors.map{ |k,v| [k, v].join(' ')}.join(', ')
-      end
+      return @errors.map { |k, v| [k, v].join(' ') }.join(', ') unless valid_params?
+
+      send_data
     end
 
     private
 
     def valid_params?
       if shape
-        result = shape.call(@data)
+        result = shape.call(@data.deep_symbolize_keys)
         @errors = result.errors.to_h
       end
 
@@ -31,17 +33,17 @@ module TochkaCyclopsApi
     end
 
     def send_data
-      TochkaCyclopsApi::Request.send(body)
+      TochkaCyclopsApi::Request.send(body, @method)
     end
 
     def shape
-      begin
-        schema = ('TochkaCyclopsApi::Schemas::' + camel_case_method).constantize
-        schema.new
-      rescue => e
-        @errors = {error: e.message}
-        false
-      end
+      require_relative "schemas/requests/#{@method}"
+      schema = ['TochkaCyclopsApi', 'Schemas', 'Requests', camel_case_method].join('::').constantize
+
+      schema.new
+    rescue => e
+      @errors = { error: e.message }
+      false
     end
 
     def camel_case_method
@@ -50,10 +52,10 @@ module TochkaCyclopsApi
 
     def body
       {
-        "jsonrpc": "2.0",
+        "jsonrpc": '2.0',
         "method": @method,
         "params": @data,
-        "id": "908ca508-f1f1-4256-9c43-9ba7ad9c45fb"
+        "id": @id
       }.to_json
     end
   end
