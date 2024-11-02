@@ -20,14 +20,16 @@ module TochkaCyclopsApi
   end
 
   class << self
-    include DataProcessor
-
     def configuration
       @configuration ||= Configuration.new
     end
 
     def configure
       yield(configuration)
+    end
+
+    def send_request(method: ,data: , layer: )
+      DataProcessor.send_request(method: ,data: , layer: )
     end
   end
 end

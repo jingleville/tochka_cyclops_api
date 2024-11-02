@@ -5,20 +5,34 @@ require_relative 'schemas/responses/echo'
 module TochkaCyclopsApi
   # Class for processing the response received from the api bank
   class Response
-    def self.create(request, response, method)
-      @method = method
+    def self.create(request: ,response: ,method:)
       @request = request
       @response = response
-      parse
+      @method = method
+      @body = JSON.parse(@response.body)
+      @response_schema = "TochkaCyclopsApi::Schemas::Responses::#{camel_case_method}".constantize
+      @error_schema = 'TochkaCyclopsApi::Schemas::Responses::Error'.constantize
 
-      {
-        response_struct: @response_struct,
-        result: @result
-      }
+      call
     end
 
-    def self.parse
-      @body = JSON.parse(@response.body)
+    private
+
+    def self.call
+      @result = @body['result']
+      @error = @body['error']
+
+      parse_error
+      parse_result
+
+      if @error.present?
+        Result.failure(@error)
+      else
+        Result.success(@results)
+      end
+    end
+
+    def self.parse_response
       if @body.key? 'result'
         parse_result
       elsif @body.key? 'error'
@@ -27,37 +41,24 @@ module TochkaCyclopsApi
     end
 
     def self.parse_result
-      @result = @body['result']
-      response_schema = schema || -> { "Schema for #{@method} is not found" }[]
+      return nil if @result.nil?
 
       @response = TochkaCyclopsResponse.create(body: @body, result: @result)
-      @request.update(result: @response)
+      @request.update(result: @response, status: 'success')
       @result.deep_symbolize_keys if @result.is_a? Hash
-      @response_struct = response_schema.new(@result)
+      @response_struct = @response_schema.new(@result)
     end
 
     def self.parse_error
-      @result = @body['error']
-      require_relative 'schemas/responses/error'
-      response_schema = 'TochkaCyclopsApi::Schemas::Responses::Error'.constantize
+      return nil if @error.nil?
 
       @response = TochkaCyclopsError.create(
         body: @body,
-        code: @result['code'],
-        message: @result['message']
+        code: @error['code'],
+        message: @error['message']
       )
-
-      @request.update(result: @response)
-
-      @response_struct = response_schema.new(@result.deep_symbolize_keys)
-    end
-
-    def self.schema
-      require_relative "schemas/responses/#{@method}"
-      "TochkaCyclopsApi::Schemas::Responses::#{camel_case_method}".constantize
-    rescue StandardError => e
-      @errors = { error: e.message }
-      false
+      @request.update(result: @response, status: 'failure')
+      @response_struct = @error_schema.new(@error.deep_symbolize_keys)
     end
 
     def self.camel_case_method

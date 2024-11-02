@@ -11,67 +11,51 @@ require_relative 'schemas/requests/echo'
 
 module TochkaCyclopsApi
   # Module for input data validation and subsequent request invocation
-  module DataProcessor
-    def send_request(method:, data:, layer: prod)
-      @uri = uri_for(layer)
+  class DataProcessor
+    def self.send_request(method:, data:, layer: )
       @method = method
       @data = data
-      @id = SecureRandom.uuid
-      @schema = shape
-      @validation = @schema&.call(@data.deep_symbolize_keys)
+      @layer = layer
       @errors = {}
+      @url = url_for
+      @request_id = SecureRandom.uuid
+      schemas
+      validation = @request_schema&.call(@data.deep_symbolize_keys)
+      @validation_errors = validation&.errors.to_h
 
       call
     end
 
     private
 
-    def call
-      @errors[:uri] = "Layer you called for is not exist" if @uri.nil?
-      @errors[:schema] = "Schema for method #{@method} is not found" if @schema.nil?
+    def self.call
+      @errors[:url] = "Layer you called for is not exist" if @url.nil?
+      @errors[:request_schema] = "Request schema for method #{@method} is not found" if @request_schema.nil?
+      @errors[:response_schema] = "Response schema for method #{@method} is not found" if @response_schema.nil?
 
-      if @schema
-        @errors[:validation] = validation.errors.to_h
-      end
+      @errors[:validation] = @validation_errors if @request_schemas.present?
 
       if @errors.keys.any?
-        return Result.new(result: nil, errors: @errors)
+        Result.failure(@errors)
+      else
+        TochkaCyclopsApi::Request.send_request(method: @method, body: body, url: @url)
       end
-
-      send_data
     end
 
-    def send_data
-      TochkaCyclopsApi::Request.send_request(method: @method, body: body)
-    end
-
-    def uri_for(layer)
+    def self.url_for
       {
         stage: 'https://stage.tochka.com/api/v1/cyclops',
         pre: 'https://pre.tochka.com/api/v1/cyclops',
         prod: 'https://api.tochka.com/api/v1/cyclops'
-      }.fetch(layer, nil)
+      }.fetch(@layer, nil)
     end
 
-
-
-    def validate_params(schema)
-      schema.call(@data.deep_symbolize_keys)
+    def self.schemas
+      @request_schema = request_schema
+      @response_schema = response_schema
     end
 
-    # def valid_params?(schema)
-    #   if shape
-    #     result = shape.call(@data.deep_symbolize_keys)
-    #     @error = Error.new(
-    #       'Invalid schema',
-    #       result.errors.to_h
-    #     )
-    #   end
-
-    #   @error.description.nil?
-    # end
-
-    def shape
+    def self.request_schema
       require_relative "schemas/requests/#{@method}"
       schema = ['TochkaCyclopsApi', 'Schemas', 'Requests', camel_case_method].join('::').constantize
 
@@ -80,16 +64,23 @@ module TochkaCyclopsApi
       nil
     end
 
-    def camel_case_method
+    def self.response_schema
+      require_relative "schemas/responses/#{@method}"
+      schema = ['TochkaCyclopsApi', 'Schemas', 'Responses', camel_case_method].join('::').constantize
+    rescue => e
+      nil
+    end
+
+    def self.camel_case_method
       @method.split('_').map(&:capitalize).join
     end
 
-    def body
+    def self.body
       {
         "jsonrpc": '2.0',
         "method": @method,
         "params": @data,
-        "id": @id
+        "id": @request_id
       }.to_json
     end
   end

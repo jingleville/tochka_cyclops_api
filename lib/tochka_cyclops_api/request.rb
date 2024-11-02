@@ -6,53 +6,87 @@ require_relative 'response'
 
 module TochkaCyclopsApi
   # Module for sending requests to the bank's api
-  module Request
-    def self.send_request(body, method)
+  class Request
+    def self.send_request(body:, method:, url: )
       @method = method
-      initialize_request(body)
+      @body = body
+      @uri = URI(url)
+      @request_object = initialize_request_object
+      @post_request = initialize_post_request
+      @adapter = initialize_adapter
 
-      uri = URI('https://pre.tochka.com/api/v1/cyclops/v2/jsonrpc')
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
+      call
+    end
 
-      request = Net::HTTP::Post.new(uri, {
-        'sign-data' => signature(body),
-        'sign-thumbprint' => TochkaCyclopsApi.configuration.sign_thumbprint,
-        'sign-system' => TochkaCyclopsApi.configuration.sign_system,
-        'Content-Type' => 'application/pdf'
-      })
-      request.body = body
+    private
 
-      response = http.request(request)
+    def self.call
+      get_response
+      response = handle_response
 
-      case response.code.to_i
-      when (200..299)
-        @request.update(status: 'finished')
-        TochkaCyclopsApi::Response.create(@request, response, method)
-      when (400..499)
-        -> { 'Our server error' }[]
+      case response[:status]
+      when :error
+        Result.failure(response[:data])
       else
-        @request.update(status: 'failed')
-        -> { 'Their server error' }[]
+        Response.new(request: @request_object, response: response[:data], method: @method)
       end
     end
 
-    def self.signature(body)
-      digest = OpenSSL::Digest.new('sha256')
-      private_key = OpenSSL::PKey::RSA.new(TochkaCyclopsApi.configuration.private_key)
-      signature_key = private_key.sign(digest, body)
-      base64_signature = Base64.strict_encode64(signature_key)
-      base64_signature.gsub("\n", '')
+    def self.initialize_adapter
+      adapter = Net::HTTP.new(@uri.host, @uri.port)
+      adapter.use_ssl = true
+      adapter
     end
 
-    def self.initialize_request(body)
-      @request = TochkaCyclopsRequest.create(
+    def self.initialize_request_object
+      TochkaCyclopsRequest.create(
         method: @method,
-        body: body,
+        body: @body,
         request_identifier: @id,
         # idempotency_key:
         status: 'initialized'
       )
+    end
+
+    def self.initialize_post_request
+      post_request = Net::HTTP::Post.new(@uri, {
+        'sign-data' => signature,
+        'sign-thumbprint' => TochkaCyclopsApi.configuration.sign_thumbprint,
+        'sign-system' => TochkaCyclopsApi.configuration.sign_system,
+        'Content-Type' => 'application/json'
+      })
+      post_request.body = @body
+      post_request
+    end
+
+    def self.get_response
+      @response = @adapter.request(@post_request)
+    rescue => e
+      @error = { request_error: e }
+    end
+
+    def self.handle_response
+      return { status: :error, data: @error } if @error
+
+      status =  case @response.code.to_i
+                when (200..299)
+                  :ok
+                else
+                  :error
+                end
+
+      {
+        status: status,
+        data: { request_error: @response }
+      }
+    end
+
+    def self.signature
+      digest = OpenSSL::Digest.new('sha256')
+      private_key = OpenSSL::PKey::RSA.new(TochkaCyclopsApi.configuration.private_key)
+      signature_key = private_key.sign(digest, @body)
+      base64_signature = Base64.strict_encode64(signature_key)
+      base64_signature.gsub("\n", '')
     end
   end
 end
