@@ -34,3 +34,10 @@ module TochkaCyclopsApi
     end
   end
 end
+
+
+class UpdateBeneficiaryFl < Dry::Validation::Contract
+  schema do
+    required(:beneficiary_id).value(:string)
+  end
+end

@@ -70,15 +70,16 @@ module TochkaCyclopsApi
 
       status =  case @response.code.to_i
                 when (200..299)
-                  :ok
+                  {
+                    status: :ok,
+                    data: @response
+                  }
                 else
-                  :error
+                  {
+                    status: :error,
+                    data: { request_error: @response }
+                  }
                 end
-
-      {
-        status: status,
-        data: { request_error: @response }
-      }
     end
 
     def self.signature

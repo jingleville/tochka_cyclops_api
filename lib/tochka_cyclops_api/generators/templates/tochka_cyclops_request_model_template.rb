@@ -3,5 +3,5 @@
 # RequestModel generator
 class TochkaCyclopsRequest < ActiveRecord::Base
   belongs_to :result, polymorphic: true
-  enum :status, %w[initialized failed finished]
+  enum :status, %w[initialized failure success]
 end
