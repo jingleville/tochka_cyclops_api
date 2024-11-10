@@ -1,8 +1,7 @@
 PATH
   remote: .
   specs:
-    tochka_cyclops_api (0.1.0)
-      activesupport (= 7.2.1.1)
+    tochka_cyclops_api (0.3.0)
       dry-struct (~> 1.6)
       dry-validation (~> 1.10)
 

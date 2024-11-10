@@ -10,6 +10,8 @@ module TochkaCyclopsApi
         schema do
           required(:text).value(:string)
         end
+
+        EXAMPLE = "{ text: 'Echo' }"
       end
     end
   end

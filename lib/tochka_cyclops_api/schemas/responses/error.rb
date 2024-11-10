@@ -8,11 +8,11 @@ module TochkaCyclopsApi
       module Types
         include Dry.Types()
       end
-      # Response chema for bank's api errors
+      # Response schema for bank's api errors
       class Error < Dry::Struct
         attribute :code, Types::Strict::Integer
         attribute :message, Types::Strict::String
-        attribute :meta, Types::Strict::Array
+        attribute :meta, Types::Strict::Array.optional
       end
     end
   end

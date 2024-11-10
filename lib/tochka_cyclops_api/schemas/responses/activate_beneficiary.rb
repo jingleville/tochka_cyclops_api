@@ -9,8 +9,8 @@ end
 module TochkaCyclopsApi
   module Schemas
     module Responses
-      # Response schema for update_beneficiary_ul request
-      class UpdateBeneficiaryUl < Dry::Struct
+      # Response schema for activate_beneficiary request
+      class ActivateBeneficicary < Dry::Struct
         # Schema for beneficiary field of main response
         class BeneficiaryData < Dry::Struct
           attribute :inn, Types::Strict::String

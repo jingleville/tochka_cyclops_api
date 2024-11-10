@@ -8,7 +8,3 @@ require_relative 'lib/tochka_cyclops_api/methods'
 RuboCop::RakeTask.new
 
 task default: :rubocop
-
-task :methods do
-  puts TochkaCyclopsApi::METHODS
-end
