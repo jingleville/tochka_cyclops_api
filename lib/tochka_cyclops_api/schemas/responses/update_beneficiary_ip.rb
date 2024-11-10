@@ -4,24 +4,16 @@ require 'dry-validation'
 
 module TochkaCyclopsApi
   module Schemas
-    module Requests
-      # Schema for beneficiary_data field of main schema
-      class BeneficiaryData < Dry::Validation::Contract
-        params do
-          required(:first_name).value(:string)
-          required(:last_name).value(:string)
-          optional(:middle_name).value(:string)
+    module Responses
+      # Response schema for update_beneficiary_ip request
+      class UpdateBeneficiaryIp < Dry::Struct
+        # Schema for beneficiary field of main response
+        class BeneficiaryData < Dry::Struct
+          attribute :inn, Types::Strict::String
+          attribute :id, Types::Strict::String
         end
-      end
 
-      # https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-create-beneficiary-ip
-      class UpdateBeneficiaryIp < Dry::Validation::Contract
-        schema do
-          required(:beneficiary_id).value(:string)
-          required(:beneficiary_data).schema(
-            TochkaCyclopsApi::Schemas::Responses::BeneficiaryData.schema
-          )
-        end
+        attribute :beneficiary, BeneficiaryData
       end
     end
   end

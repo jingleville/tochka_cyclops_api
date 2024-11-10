@@ -21,43 +21,36 @@ module TochkaCyclopsApi
       @result = @body['result']
       @error = @body['error']
 
-      parse_error
-      parse_result
-
       if @error.present?
-        Result.failure(@error)
-      else
-        Result.success(@response_struct)
-      end
-    end
-
-    def self.parse_response
-      if @body.key? 'result'
-        parse_result
-      elsif @body.key? 'error'
         parse_error
+      else
+        parse_result
       end
     end
 
     def self.parse_result
       return nil if @result.nil?
 
-      @response = TochkaCyclopsResponse.create(body: @body, result: @result)
-      @request.update(result: @response, status: 'success')
+      response = TochkaCyclopsResponse.create(body: @body, result: @result)
+      @request.update(result: response, status: 'success')
       @result.deep_symbolize_keys if @result.is_a? Hash
-      @response_struct = @response_schema.new(@result)
+      response_struct = @response_schema.new(@result)
+
+      Result.success(response_struct)
     end
 
     def self.parse_error
       return nil if @error.nil?
 
-      @response = TochkaCyclopsError.create(
+      response = TochkaCyclopsError.create(
         body: @body,
         code: @error['code'],
         message: @error['message']
       )
-      @request.update(result: @response, status: 'failure')
-      @response_struct = @error_schema.new(@error.deep_symbolize_keys)
+      @request.update(result: response, status: 'failure')
+      response_struct = @error_schema.new(@error.deep_symbolize_keys)
+
+      Result.success(response_struct)
     end
 
     def self.camel_case_method

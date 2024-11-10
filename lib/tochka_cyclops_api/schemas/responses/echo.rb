@@ -5,7 +5,7 @@ require 'dry-struct'
 module TochkaCyclopsApi
   module Schemas
     module Responses
-      # Response chema for echo request
+      # Response schema for echo request
       class Echo
         attr_accessor :text
 
