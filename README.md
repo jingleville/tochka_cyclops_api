@@ -10,7 +10,7 @@ A simple way to interact with the ["Tochka" bank's api][api_source_page]
 - [Usage](#usage)
   - [Rake tasks](#rake)
 - [TODO](#todo)
-- [Acknoledgements](#acknowledgements)
+- [Acknowledgements](#acknowledgements)
 
 ## Getting started
 
