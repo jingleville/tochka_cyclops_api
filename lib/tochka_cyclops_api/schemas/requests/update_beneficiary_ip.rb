@@ -25,7 +25,7 @@ module TochkaCyclopsApi
 
         EXAMPLE = "
 {
-  beneficiary_id: 981fee11-9969-4e80-9f5f-02af462cb51e,
+  beneficiary_id: '981fee11-9969-4e80-9f5f-02af462cb51e',
   beneficiary_data: {
     first_name: 'Иван',
     middle_name: 'Иванович',
