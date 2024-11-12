@@ -9,6 +9,7 @@ A simple way to interact with the ["Tochka" bank's api][api_source_page]
   - [Settings](#settings)
 - [Usage](#usage)
   - [Rake tasks](#rake)
+- [TODO](#todo)
 - [Acknoledgements](#acknowledgements)
 
 ## Getting started
@@ -123,6 +124,66 @@ TochkaCyclopsApi.send_request(
   layer: :stage
 )
 ```
+## TODO
+
+- [x] Update `README.md`
+- [ ] Refactor code base
+- [ ] Realize request resend logic
+- [ ] Add API schemas
+- - [ ] Beneficiaries
+- - - [ ] [CreateBeneficicaryUl](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-create-beneficiary-ul)
+- - - [ ] [CreateBeneficicaryIp](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-create-beneficiary-ip)
+- - - [ ] [CreateBeneficicaryFl](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-create-beneficiary-fl)
+- - - [ ] [UpdateBeneficicaryUl](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-update-beneficiary-ul)
+- - - [ ] [UpdateBeneficicaryIp](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-update-beneficiary-ip)
+- - - [ ] [UpdateBeneficicaryFl](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-update-beneficiary-fl)
+- - - [ ] [ListBeneficiary](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-list-beneficiary)
+- - - [ ] [GetBeneficiary](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-get_beneficiary)
+- - - [ ] [DeactivateBeneficicary](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-deactivate-beneficiary)
+- - - [ ] [ActivateBeneficiary](https://api.tochka.com/static/v1/tender-docs/cyclops/main/api_v2.html#api-v2-activate-beneficiary)
+- - [ ] Virtual accounts
+- - [ ] Payments
+- - [ ] Deals
+- - [ ] Documents
+- - [ ] Quick payment system
+- - [ ] Documents upload
+- [ ] Add tests with RSpec
+- [ ] 100% code coverage with RuboCop
+- [ ] Refactor code according to the style guides
+
+<li class="toctree-l2"><a class="reference internal" href="#id14">Виртуальные счета</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-virtual-account">Создание виртуального счёта</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#list-virtual-account">Список виртуальных счетов</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-virtual-account">Информация по виртуальному счёту</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-list-virtual-transaction">Отобразить виртуальные операции по виртуальному счёту</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-refund-virtual-account">Вывод денег с виртуального счёта</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-transfer-between-virtual-accounts">Переводы между виртуальными счетами</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#v2">Перевод денег между виртуальными счетами (v2)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-get-virtual-accounts-transfer">Получить информацию по переводу между виртуальными счетами</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="#id22">Платежи</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-list-payments">Список платежей</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-list-payments-v2">Список платежей (v2)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-get-payment">Информация по платежу</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#identification-payment">Идентификация платежей</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-identification-returned-payment-by-deal">Идентификация возвращенного платежа по сделке</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-refund-payment">Возврат платежей</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compliance-check-payment">Проверка платежа на возможность проведения</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#payment-of-taxes">Выплата налогов исполнителю</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pdf">Генерация платежного поручения в PDF формате</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="#api-v2-deal">Сделки</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-create-deal">Создание сделки</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-update-deal">Обновление сделки</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deprecated">Список сделок (deprecated)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-list-deals">Список сделок новая</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-get-deal">Информация по сделке</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-execute-deal">Исполнение сделки</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-v2-rejected-deal">Отмена сделки</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cancel-deal-with-executed-recipients">Отмена сделки из коррекции с одним плательщиком</a></li>
+
 
 ## Acknowledgements
 
