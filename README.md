@@ -9,6 +9,7 @@ A simple way to interact with the ["Tochka" bank's api][api_source_page]
   - [Settings](#settings)
 - [Usage](#usage)
   - [Rake tasks](#rake)
+- [Acknoledgements](#acknowledgements)
 
 ## Getting started
 
@@ -123,4 +124,10 @@ TochkaCyclopsApi.send_request(
 )
 ```
 
+## Acknowledgements
+
+Special thanks for support in development to [unurgunite][unurgunite] and [o-200][o-200]
+
 [api_source_page]: https://api.tochka.com/static/v1/tender-docs/cyclops/main/index.html
+[unurgunite]: https://github.com/unurgunite
+[o-200]: https://github.com/o-200
